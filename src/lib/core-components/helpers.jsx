@@ -31,6 +31,7 @@ export const checkAnswer = (index, correctAnswer, answerSelectionType, {
     3: { disabled: true },
   };
   const userInputCopy = [...userInput];
+  console.log(userInputCopy, 'copy1 checkAnswer');
   if (answerSelectionType === 'single') {
     if (userInputCopy[currentQuestionIndex] === undefined) {
       userInputCopy[currentQuestionIndex] = index;
@@ -167,6 +168,7 @@ export const selectAnswer = (index, correctAnswer, answerSelectionType, {
     3: { selected: false },
   };
   const userInputCopy = [...userInput];
+  console.log(userInputCopy, 'copy2 checkAnswer');
   if (answerSelectionType === 'single') {
     correctAnswer = Number(correctAnswer);
     userInputCopy[currentQuestionIndex] = index;
@@ -199,6 +201,7 @@ export const selectAnswer = (index, correctAnswer, answerSelectionType, {
 
     setShowNextQuestionButton(true);
   } else {
+    console.log(userInputCopy, 'copy');
     if (userInputCopy[currentQuestionIndex] === undefined) {
       userInputCopy[currentQuestionIndex] = [];
     }

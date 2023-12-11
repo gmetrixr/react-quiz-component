@@ -41,6 +41,11 @@
   color: white;
 }
 
+.react-quiz-container .questionWrapper .btn.neutral {
+  background: gray;
+  color: white;
+}
+
 .react-quiz-container .questionModal .alert {
   padding: 20px;
   margin-bottom: 21px;

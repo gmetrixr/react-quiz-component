@@ -91,9 +91,7 @@ function Core({
     setButtons({});
 
     if (currentQuestionIdx + 1 === questions.length) {
-      if (userInput.length !== questions.length) {
-        alert('Quiz is incomplete');
-      } else if (allowNavigation) {
+      if (allowNavigation) {
         const submitQuiz = confirm('You have finished all the questions. Submit Quiz now?');
         if (submitQuiz) {
           setEndQuiz(true);
@@ -199,41 +197,83 @@ function Core({
       );
     });
   }, [endQuiz, filteredValue]);
+  const [currentAnswer, setCurrentAnswer] = useState({});
+  const saveAnswer = ({ index, correctAnswer, answerSelectionType, selectedOptions }) => {
+    setCurrentAnswer({
+      index: index + 1,
+      correctAnswer,
+      answerSelectionType,
+      selectedOptions,
+    });
+  };
+  const resetAnswer = () => {
+    setCurrentAnswer({});
+  };
+  const submitAnswer = () => {
+    if (revealAnswerOnSubmit) {
+      selectAnswer(currentAnswer.index, currentAnswer.correctAnswer, currentAnswer.answerSelectionType, {
+        userInput,
+        currentQuestionIndex,
+        setButtons,
+        setShowNextQuestionButton,
+        incorrect,
+        correct,
+        setCorrect,
+        setIncorrect,
+        setUserInput,
+      });
+    } else {
+      checkAnswer(currentAnswer.index, currentAnswer.correctAnswer, currentAnswer.sanswerSelectionType, {
+        userInput,
+        userAttempt,
+        currentQuestionIndex,
+        continueTillCorrect,
+        showNextQuestionButton,
+        incorrect,
+        correct,
+        setButtons,
+        setIsCorrect,
+        setIncorrectAnswer,
+        setCorrect,
+        setIncorrect,
+        setShowNextQuestionButton,
+        setUserInput,
+        setUserAttempt,
+      });
+    }
+  };
 
   const renderAnswers = (question, answerButtons) => {
     const {
       answers, correctAnswer, questionType, questionIndex,
     } = question;
     let { answerSelectionType } = question;
-    const onClickAnswer = (index) => checkAnswer(index + 1, correctAnswer, answerSelectionType, {
-      userInput,
-      userAttempt,
-      currentQuestionIndex,
-      continueTillCorrect,
-      showNextQuestionButton,
-      incorrect,
-      correct,
-      setButtons,
-      setIsCorrect,
-      setIncorrectAnswer,
-      setCorrect,
-      setIncorrect,
-      setShowNextQuestionButton,
-      setUserInput,
-      setUserAttempt,
-    });
-
-    const onSelectAnswer = (index) => selectAnswer(index + 1, correctAnswer, answerSelectionType, {
-      userInput,
-      currentQuestionIndex,
-      setButtons,
-      setShowNextQuestionButton,
-      incorrect,
-      correct,
-      setCorrect,
-      setIncorrect,
-      setUserInput,
-    });
+    const handleClick = (index) => {
+      if (answerSelectionType === 'single') {
+        saveAnswer({ index, answerSelectionType, correctAnswer });
+      } else {
+        if (!currentAnswer.selectedOptions) currentAnswer.selectedOptions = [index ];
+        else if (currentAnswer.selectedOptions.includes(index)) {
+          currentAnswer.selectedOptions.splice(currentAnswer.selectedOptions.indexOf(index), 1);
+        } else {
+          currentAnswer.selectedOptions.push(index);
+        }
+        saveAnswer({
+          index,
+          answerSelectionType,
+          correctAnswer,
+          selectedOptions: currentAnswer.selectedOptions,
+        });
+      }
+    };
+    const isCurrentAnswer = (index) => {
+      // console.log(userInput);
+      if (answerSelectionType === 'single') {
+        return currentAnswer.index === index + 1 ? 'neutral' : 'what?';
+      }
+      if (userInput[questionIndex - 1] === undefined) return null;
+      return userInput[questionIndex - 1].includes(index + 1) ? 'neutral' : 'what?';
+    };
 
     const checkSelectedAnswer = (index) => {
       if (userInput[questionIndex - 1] === undefined) {
@@ -255,8 +295,8 @@ function Core({
             <button
               type="button"
               disabled={answerButtons[index].disabled || false}
-              className={`${answerButtons[index].className} answerBtn btn`}
-              onClick={() => (revealAnswerOnSubmit ? onSelectAnswer(index) : onClickAnswer(index))}
+              className={`${answerButtons[index].className} ${isCurrentAnswer(index)} answerBtn btn`}
+              onClick={() => handleClick(index)}
             >
               {questionType === 'text' && <span>{answer}</span>}
               {questionType === 'photo' && <img src={answer} alt="answer" />}
@@ -265,8 +305,8 @@ function Core({
           : (
             <button
               type="button"
-              onClick={() => (revealAnswerOnSubmit ? onSelectAnswer(index) : onClickAnswer(index))}
-              className={`answerBtn btn ${(allowNavigation && checkSelectedAnswer(index + 1)) ? 'selected' : null}`}
+              onClick={() => handleClick(index)}
+              className={`answerBtn btn ${isCurrentAnswer(index)}  ${(allowNavigation && checkSelectedAnswer(index + 1)) ? 'selected' : null}`}
             >
               {questionType === 'text' && answer}
               {questionType === 'photo' && <img src={answer} alt="answer" />}
@@ -320,7 +360,7 @@ function Core({
           {activeQuestion && activeQuestion.questionPic && <img src={activeQuestion.questionPic} alt="question" />}
           {activeQuestion && renderTags(answerSelectionTypeState, activeQuestion.correctAnswer.length, activeQuestion.segment)}
           {activeQuestion && renderAnswers(activeQuestion, buttons)}
-          {(showNextQuestionButton || allowNavigation)
+          {(true || showNextQuestionButton || allowNavigation)
           && (
           <div className="questionBtnContainer">
             {(allowNavigation && currentQuestionIndex > 0) && (
@@ -332,7 +372,17 @@ function Core({
                 {appLocale.prevQuestionBtn}
               </button>
             )}
-            <button onClick={() => nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn" type="button">
+            <button
+              onClick={() => {
+                if (currentAnswer.index) {
+                  submitAnswer();
+                  nextQuestion(currentQuestionIndex);
+                  resetAnswer();
+                }
+              }}
+              className="nextQuestionBtn btn"
+              type="button"
+            >
               {appLocale.nextQuestionBtn}
             </button>
           </div>

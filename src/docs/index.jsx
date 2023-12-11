@@ -20,6 +20,7 @@ function App() {
         onComplete={setQuizResult}
         onQuestionSubmit={(obj) => console.log('user question results:', obj)}
         disableSynopsis
+        revealAnswerOnSubmit
       />
     </div>
   );
