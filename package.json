@@ -9,8 +9,8 @@
     "docs": "webpack --mode production",
     "build": "rollup -c",
     "lint": "eslint src --ext .jsx --ext .js --fix",
-    "publish:npm": "V=$(node -p \"require('./package.json').version\") && pnpm publish --no-git-check",
-    "publish:version": "N=$(node -p \"require('./package.json').name\") && pnpm version patch --message \"v%s: $N [ci skip]\""
+    "publish:npm": "V=$(node -p \"require('./package.json').version\") && npm publish --no-git-check",
+    "publish:version": "N=$(node -p \"require('./package.json').name\") && npm version patch --message \"v%s: $N [ci skip]\""
   },
   "keywords": [
     "react",
