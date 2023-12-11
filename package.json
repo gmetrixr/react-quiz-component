@@ -12,6 +12,9 @@
     "publish:npm": "V=$(node -p \"require('./package.json').version\") && npm publish --no-git-check",
     "publish:version": "N=$(node -p \"require('./package.json').name\") && npm version patch --message \"v%s: $N [ci skip]\""
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "react",
     "reactjs",
