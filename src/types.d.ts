@@ -3,20 +3,20 @@
 export type Question = {
   question: string,
   questionType: string,
-  questionPic: string,
+  questionPic?: string,
   answerSelectionType: "single" | "multiple"
   answers: string[],
-  correctAnswer: string,
-  messageForCorrectAnswer: string,
-  messageForIncorrectAnswer: string,
-  explanation: string,
-  point: number,
+  correctAnswer: string | number[],
+  messageForCorrectAnswer?: string,
+  messageForIncorrectAnswer?: string,
+  explanation?: string,
+  point: string,
 }
 
 export type QuizProps = {
   quizTitle: string,
   quizSynopsis?: string,
-  nrOfQuestions: number,
+  nrOfQuestions: string,
   questions: Question[],
 };
 
