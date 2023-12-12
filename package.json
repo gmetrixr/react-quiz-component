@@ -1,6 +1,6 @@
 {
   "name": "@gmetrixr/react-quiz-component",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "React Quiz Component",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
