@@ -10,8 +10,7 @@
     "docs": "webpack --mode production",
     "rollup:compile": "rollup -c",
     "lint": "eslint src --ext .jsx --ext .js --fix",
-    "build:types": "cp src/types.d.ts dist/types.d.ts",
-    "build": "npm run rollup:compile && npm run build:types",
+    "build": "npm run rollup:compile",
     "publish:npm": "V=$(node -p \"require('./package.json').version\") && npm publish --no-git-check",
     "publish:version": "N=$(node -p \"require('./package.json').name\") && npm version patch --message \"v%s: $N [ci skip]\""
   },
