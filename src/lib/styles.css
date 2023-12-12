@@ -41,6 +41,11 @@
   color: white;
 }
 
+.react-quiz-container .questionWrapper .btn.neutral {
+  background: gray;
+  color: white;
+}
+
 .react-quiz-container .questionModal .alert {
   padding: 20px;
   margin-bottom: 21px;
@@ -151,6 +156,12 @@
 .react-quiz-container .questionBtnContainer {
   display: flex;
   justify-content: space-between;
+}
+
+.react-quiz-container .navContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .react-quiz-container .quiz-result-filter {
