@@ -31,6 +31,7 @@ export const checkAnswer = (index, correctAnswer, answerSelectionType, {
     3: { disabled: true },
   };
   const userInputCopy = [...userInput];
+  console.log(userInputCopy, 'copy1 checkAnswer');
   if (answerSelectionType === 'single') {
     if (userInputCopy[currentQuestionIndex] === undefined) {
       userInputCopy[currentQuestionIndex] = index;
@@ -167,27 +168,28 @@ export const selectAnswer = (index, correctAnswer, answerSelectionType, {
     3: { selected: false },
   };
   const userInputCopy = [...userInput];
+  console.log(userInputCopy, 'copy2 checkAnswer');
   if (answerSelectionType === 'single') {
     correctAnswer = Number(correctAnswer);
     userInputCopy[currentQuestionIndex] = index;
 
-    if (index === correctAnswer) {
-      if (correct.indexOf(currentQuestionIndex) < 0) {
-        correct.push(currentQuestionIndex);
-      }
-      if (incorrect.indexOf(currentQuestionIndex) >= 0) {
-        incorrect.splice(incorrect.indexOf(currentQuestionIndex), 1);
-      }
-    } else {
-      if (incorrect.indexOf(currentQuestionIndex) < 0) {
-        incorrect.push(currentQuestionIndex);
-      }
-      if (correct.indexOf(currentQuestionIndex) >= 0) {
-        correct.splice(correct.indexOf(currentQuestionIndex), 1);
-      }
-    }
-    setCorrect(correct);
-    setIncorrect(incorrect);
+    // if (index === correctAnswer) {
+    //   if (correct.indexOf(currentQuestionIndex) < 0) {
+    //     correct.push(currentQuestionIndex);
+    //   }
+    //   if (incorrect.indexOf(currentQuestionIndex) >= 0) {
+    //     incorrect.splice(incorrect.indexOf(currentQuestionIndex), 1);
+    //   }
+    // } else {
+    //   if (incorrect.indexOf(currentQuestionIndex) < 0) {
+    //     incorrect.push(currentQuestionIndex);
+    //   }
+    //   if (correct.indexOf(currentQuestionIndex) >= 0) {
+    //     correct.splice(correct.indexOf(currentQuestionIndex), 1);
+    //   }
+    // }
+    // setCorrect(correct);
+    // setIncorrect(incorrect);
 
     setButtons((prevState) => ({
       ...prevState,
@@ -199,47 +201,40 @@ export const selectAnswer = (index, correctAnswer, answerSelectionType, {
 
     setShowNextQuestionButton(true);
   } else {
-    if (userInputCopy[currentQuestionIndex] === undefined) {
-      userInputCopy[currentQuestionIndex] = [];
-    }
-    if (userInputCopy[currentQuestionIndex].includes(index)) {
-      userInputCopy[currentQuestionIndex].splice(userInputCopy[currentQuestionIndex].indexOf(index), 1);
-    } else {
-      userInputCopy[currentQuestionIndex].push(index);
-    }
+    console.log(userInputCopy, 'copy');
 
-    if (userInputCopy[currentQuestionIndex].length === correctAnswer.length) {
-      let exactMatch = true;
-      for (const input of userInput[currentQuestionIndex]) {
-        if (!correctAnswer.includes(input)) {
-          exactMatch = false;
-          if (incorrect.indexOf(currentQuestionIndex) < 0) {
-            incorrect.push(currentQuestionIndex);
-          }
-          if (correct.indexOf(currentQuestionIndex) >= 0) {
-            correct.splice(correct.indexOf(currentQuestionIndex), 1);
-          }
-          break;
-        }
-      }
-      if (exactMatch) {
-        if (correct.indexOf(currentQuestionIndex) < 0) {
-          correct.push(currentQuestionIndex);
-        }
-        if (incorrect.indexOf(currentQuestionIndex) >= 0) {
-          incorrect.splice(incorrect.indexOf(currentQuestionIndex), 1);
-        }
-      }
-    } else {
-      if (incorrect.indexOf(currentQuestionIndex) < 0) {
-        incorrect.push(currentQuestionIndex);
-      }
-      if (correct.indexOf(currentQuestionIndex) >= 0) {
-        correct.splice(correct.indexOf(currentQuestionIndex), 1);
-      }
-    }
-    setCorrect(correct);
-    setIncorrect(incorrect);
+    // if (userInputCopy[currentQuestionIndex].length === correctAnswer.length) {
+    //   let exactMatch = true;
+    //   for (const input of userInput[currentQuestionIndex]) {
+    //     if (!correctAnswer.includes(input)) {
+    //       exactMatch = false;
+    //       if (incorrect.indexOf(currentQuestionIndex) < 0) {
+    //         incorrect.push(currentQuestionIndex);
+    //       }
+    //       if (correct.indexOf(currentQuestionIndex) >= 0) {
+    //         correct.splice(correct.indexOf(currentQuestionIndex), 1);
+    //       }
+    //       break;
+    //     }
+    //   }
+    //   if (exactMatch) {
+    //     if (correct.indexOf(currentQuestionIndex) < 0) {
+    //       correct.push(currentQuestionIndex);
+    //     }
+    //     if (incorrect.indexOf(currentQuestionIndex) >= 0) {
+    //       incorrect.splice(incorrect.indexOf(currentQuestionIndex), 1);
+    //     }
+    //   }
+    // } else {
+    //   if (incorrect.indexOf(currentQuestionIndex) < 0) {
+    //     incorrect.push(currentQuestionIndex);
+    //   }
+    //   if (correct.indexOf(currentQuestionIndex) >= 0) {
+    //     correct.splice(correct.indexOf(currentQuestionIndex), 1);
+    //   }
+    // }
+    // setCorrect(correct);
+    // setIncorrect(incorrect);
     setButtons((prevState) => ({
       ...prevState,
       [index - 1]: {
