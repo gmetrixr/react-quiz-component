@@ -6,6 +6,13 @@ import quiz from './quiz';
 const container = document.getElementById('app');
 const root = createRoot(container);
 
+function resultPage(obj) {
+  console.log(obj, 'result');
+  return (
+    <div>This will be  a result page</div>
+  );
+}
+
 function App() {
   const [quizResult, setQuizResult] = useState();
 
@@ -21,6 +28,8 @@ function App() {
         onQuestionSubmit={(obj) => console.log('user question results:', obj)}
         disableSynopsis
         revealAnswerOnSubmit
+        customResultPage={resultPage}
+        showDefaultResult={false}
       />
     </div>
   );

@@ -252,12 +252,15 @@ function Core({
       if (answerSelectionType === 'single') {
         saveAnswer({ index, answerSelectionType, correctAnswer });
       } else {
-        if (!currentAnswer.selectedOptions) currentAnswer.selectedOptions = [index ];
+        if (!currentAnswer.selectedOptions) currentAnswer.selectedOptions = [index];
         else if (currentAnswer.selectedOptions.includes(index)) {
           currentAnswer.selectedOptions.splice(currentAnswer.selectedOptions.indexOf(index), 1);
         } else {
           currentAnswer.selectedOptions.push(index);
         }
+        const userInputCopy = [...userInput];
+        userInputCopy[currentQuestionIndex] = currentAnswer.selectedOptions;
+        setUserInput(userInputCopy);
         saveAnswer({
           index,
           answerSelectionType,
@@ -271,8 +274,8 @@ function Core({
       if (answerSelectionType === 'single') {
         return currentAnswer.index === index + 1 ? 'neutral' : 'what?';
       }
-      if (userInput[questionIndex - 1] === undefined) return null;
-      return userInput[questionIndex - 1].includes(index + 1) ? 'neutral' : 'what?';
+      if (!currentAnswer.selectedOptions) return 'noooo';
+      return currentAnswer.selectedOptions.includes(index) ? 'neutral' : 'what?';
     };
 
     const checkSelectedAnswer = (index) => {

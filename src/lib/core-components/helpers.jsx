@@ -202,15 +202,7 @@ export const selectAnswer = (index, correctAnswer, answerSelectionType, {
     setShowNextQuestionButton(true);
   } else {
     console.log(userInputCopy, 'copy');
-    if (userInputCopy[currentQuestionIndex] === undefined) {
-      userInputCopy[currentQuestionIndex] = [];
-    }
-    if (userInputCopy[currentQuestionIndex].includes(index)) {
-      userInputCopy[currentQuestionIndex].splice(userInputCopy[currentQuestionIndex].indexOf(index), 1);
-    } else {
-      userInputCopy[currentQuestionIndex].push(index);
-    }
-
+    
     if (userInputCopy[currentQuestionIndex].length === correctAnswer.length) {
       let exactMatch = true;
       for (const input of userInput[currentQuestionIndex]) {
