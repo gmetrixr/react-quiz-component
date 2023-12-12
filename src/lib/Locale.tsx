@@ -14,5 +14,5 @@ const defaultLocale = {
   pickNumberOfSelection: 'Pick <numberOfSelection>',
   marksOfQuestion: '(<marks> marks)',
 };
-
+export type Locale = typeof defaultLocale;
 export default defaultLocale;

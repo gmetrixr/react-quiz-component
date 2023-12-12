@@ -1,7 +1,56 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Core from './Core';
-import defaultLocale from './Locale';
+import Core from './Core.jsx';
+import defaultLocale, { Locale } from './Locale.jsx';
 import './styles.css';
+import { number } from 'prop-types';
+
+
+export type QuestionType = "text" | "photo";
+export type AnswerType = "single" | "multiple";
+
+export type Question = {
+  question: string,
+  questionType: QuestionType,
+  questionPic?: string,
+  answerSelectionType: AnswerType,
+  answers: string[],
+  correctAnswer: number | number[],
+  messageForCorrectAnswer?: string,
+  messageForIncorrectAnswer?: string,
+  explanation?: string,
+  point: number,
+  questionIndex?: number,
+  segment: string
+}
+
+export type QuizProps = {
+  quizTitle: string,
+  quizSynopsis?: string,
+  nrOfQuestions: number,
+  questions: Question[],
+  appLocale: Locale
+};
+
+export type onQuestionSubmitProps = {
+  question: Question,
+  userAnswer: string | number | boolean,
+  isCorrect: boolean,
+}
+
+export type Props = {
+  quiz: QuizProps,
+  shuffle?: boolean,
+  shuffleAnswer?: boolean,
+  showDefaultResult?: boolean,
+  onComplete?: () => {},
+  customResultPage: any,
+  showInstantFeedback?: boolean,
+  continueTillCorrect?: boolean,
+  revealAnswerOnSubmit?: boolean,
+  allowNavigation?: boolean,
+  onQuestionSubmit?: (obj: any) => {},
+  disableSynopsis?: boolean,
+};
 
 function Quiz({
   quiz,
@@ -16,7 +65,7 @@ function Quiz({
   allowNavigation,
   onQuestionSubmit,
   disableSynopsis,
-}) {
+} : Props) : React.JSX.Element {
   const [start, setStart] = useState(false);
   const [questions, setQuestions] = useState(quiz.questions);
   const nrOfQuestions = quiz.nrOfQuestions && quiz.nrOfQuestions < quiz.questions.length
@@ -24,9 +73,9 @@ function Quiz({
     : quiz.questions.length;
 
   // Shuffle answers funtion here
-  const shuffleAnswerSequence = (oldQuestions = []) => {
+  const shuffleAnswerSequence = (oldQuestions : Question[] = []) : Question[] => {
     const newQuestions = oldQuestions.map((question) => {
-      const answerWithIndex = question.answers?.map((ans, i) => [ans, i]);
+      const answerWithIndex : [string, number][] = question.answers?.map((ans, i) => [ans, i]);
       const shuffledAnswersWithIndex = answerWithIndex.sort(
         () => Math.random() - 0.5,
       );
@@ -38,28 +87,30 @@ function Quiz({
         ) + 1;
         return {
           ...question,
-          correctAnswer: `${newCorrectAnswer}`,
+          correctAnswer: newCorrectAnswer,
           answers: shuffledAnswers,
         };
       }
       if (question.answerSelectionType === 'multiple') {
         const oldCorrectAnswer = question.correctAnswer;
-        const newCorrectAnswer = oldCorrectAnswer.map(
-          (cans) => shuffledAnswersWithIndex.findIndex(
-            (ans) => `${ans[1] + 1}` === `${cans}`,
-          ) + 1,
-        );
-        return {
-          ...question,
-          correctAnswer: newCorrectAnswer,
-          answers: shuffledAnswers,
-        };
+          if(typeof oldCorrectAnswer !== "number") {
+          const newCorrectAnswer = oldCorrectAnswer.map(
+            (cans) => shuffledAnswersWithIndex.findIndex(
+              (ans) => `${ans[1] + 1}` === `${cans}`,
+            ) + 1,
+          );
+          return {
+            ...question,
+            correctAnswer: newCorrectAnswer,
+            answers: shuffledAnswers,
+          };
+        }
       }
       return question;
     });
     return newQuestions;
   };
-  const shuffleQuestions = useCallback((q) => {
+  const shuffleQuestions = useCallback((q : Question[]) => {
     for (let i = q.length - 1; i > 0; i -= 1) {
       const j = Math.floor(Math.random() * (i + 1));
       [q[i], q[j]] = [q[j], q[i]];
@@ -90,7 +141,7 @@ function Quiz({
     setQuestions(newQuestions);
   }, [start]);
 
-  const validateQuiz = (q) => {
+  const validateQuiz = (q : QuizProps) => {
     if (!q) {
       console.error('Quiz object is required.');
       return false;
@@ -144,15 +195,15 @@ function Quiz({
         selectType = answerSelectionType || 'single';
       }
 
-      if (
-        selectType === 'single'
-        && !(typeof selectType === 'string' || selectType instanceof String)
-      ) {
-        console.error(
-          'answerSelectionType is single but expecting String in the field correctAnswer',
-        );
-        return false;
-      }
+      // if (
+      //   selectType === 'single'
+      //   && !(typeof selectType === 'string' || selectType instanceof String)
+      // ) {
+      //   console.error(
+      //     'answerSelectionType is single but expecting String in the field correctAnswer',
+      //   );
+      //   return false;
+      // }
 
       if (selectType === 'multiple' && !Array.isArray(correctAnswer)) {
         console.error(
@@ -166,7 +217,11 @@ function Quiz({
   };
 
   if (!validateQuiz(quiz)) {
-    return null;
+    return (
+      <div>
+        Need to pass a quiz object
+      </div>
+    );
   }
 
   const appLocale = {
@@ -182,7 +237,7 @@ function Quiz({
           <div>
             {appLocale.landingHeaderText.replace(
               '<questionLength>',
-              nrOfQuestions,
+              String(nrOfQuestions),
             )}
           </div>
           {quiz.quizSynopsis && (
