@@ -256,12 +256,14 @@ function Core({
   }, [endQuiz, filteredValue]);
   const [currentAnswer, setCurrentAnswer] = useState<CurrentAnswer>({});
   const saveAnswer = ({ index, correctAnswer, answerSelectionType, selectedOptions } : CurrentAnswer) => {
-    setCurrentAnswer({
-      index: index && index + 1,
-      correctAnswer,
-      answerSelectionType,
-      selectedOptions,
-    });
+    if(index !== undefined) {
+      setCurrentAnswer({
+        index: index + 1,
+        correctAnswer,
+        answerSelectionType,
+        selectedOptions,
+      });
+    }
   };
   const resetAnswer = () => {
     setCurrentAnswer({});
@@ -358,32 +360,36 @@ function Core({
     // Default single to avoid code breaking due to automatic version upgrade
     answerSelectionType = answerSelectionType || 'single';
 
-    return answers.map((answer, index) => (
-      <Fragment key={uuidv4()}>
-        {(answerButtons[index] !== undefined)
-          ? (
-            <button
-              type="button"
-              disabled={answerButtons[index].disabled || false}
-              className={`${answerButtons[index].className} ${isCurrentAnswer(index)} answerBtn btn`}
-              onClick={() => handleClick(index)}
-            >
-              {questionType === 'text' && <span>{answer}</span>}
-              {questionType === 'photo' && <img src={answer} alt="answer" />}
-            </button>
-          )
-          : (
-            <button
-              type="button"
-              onClick={() => handleClick(index)}
-              className={`answerBtn btn ${isCurrentAnswer(index)}  ${(allowNavigation && checkSelectedAnswer(index + 1)) ? 'selected' : null}`}
-            >
-              {questionType === 'text' && answer}
-              {questionType === 'photo' && <img src={answer} alt="answer" />}
-            </button>
-          )}
-      </Fragment>
-    ));
+    return (
+      <div className='answersList'>
+        {answers.map((answer, index) => {
+          return (<Fragment key={uuidv4()}>
+            {(answerButtons[index] !== undefined)
+              ? (
+                <button
+                  type="button"
+                  disabled={answerButtons[index].disabled || false}
+                  className={`${answerButtons[index].className} ${isCurrentAnswer(index)} answerBtn btn`}
+                  onClick={() => handleClick(index)}
+                >
+                  {questionType === 'text' && <span>{answer}</span>}
+                  {questionType === 'photo' && <img src={answer} alt="answer" />}
+                </button>
+              )
+              : (
+                <button
+                  type="button"
+                  onClick={() => handleClick(index)}
+                  className={`answerBtn btn ${isCurrentAnswer(index)}  ${(allowNavigation && checkSelectedAnswer(index + 1)) ? 'selected' : null}`}
+                >
+                  {questionType === 'text' && answer}
+                  {questionType === 'photo' && <img src={answer} alt="answer" />}
+                </button>
+              )}
+          </Fragment>);
+        })}
+      </div>
+    );
   };
 
   const renderResult = () => (
@@ -422,10 +428,10 @@ function Core({
               userAnswer={[...userInput].pop()}
             />
           </div>
-          <div>
+          <div className='questionInfo'>
             {`${appLocale.question} ${(currentQuestionIndex + 1)} / ${questions.length}:`}
           </div>
-          <h3 dangerouslySetInnerHTML={rawMarkup(`${activeQuestion && activeQuestion.question} ${appLocale.marksOfQuestion.replace('<marks>', String(activeQuestion.point))}`)} />
+          <h3 className='question' dangerouslySetInnerHTML={rawMarkup(`${activeQuestion && activeQuestion.question} ${appLocale.marksOfQuestion.replace('<marks>', String(activeQuestion.point))}`)} />
 
           {activeQuestion && activeQuestion.questionPic && <img src={activeQuestion.questionPic} alt="question" />}
           {activeQuestion && renderTags(answerSelectionTypeState, activeQuestion.correctAnswer, activeQuestion.segment)}

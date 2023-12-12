@@ -49,7 +49,7 @@ type QuizProps = {
     quizSynopsis?: string;
     nrOfQuestions: number;
     questions: Question[];
-    appLocale: Locale;
+    appLocale?: Locale;
 };
 type onQuestionSubmitProps = {
     question: Question;
@@ -61,13 +61,13 @@ type Props = {
     shuffle?: boolean;
     shuffleAnswer?: boolean;
     showDefaultResult?: boolean;
-    onComplete: (questionSummary: QuestionSummary) => {};
-    customResultPage: any;
-    showInstantFeedback: boolean;
+    customResultPage?: (questionSummary: QuestionSummary) => React.JSX.Element;
+    onComplete: (questionSummary: QuestionSummary) => void;
+    showInstantFeedback?: boolean;
     continueTillCorrect?: boolean;
     revealAnswerOnSubmit?: boolean;
     allowNavigation?: boolean;
-    onQuestionSubmit: (obj: any) => {};
+    onQuestionSubmit: (obj: any) => void;
     disableSynopsis?: boolean;
 };
 declare function Quiz({ quiz, shuffle, shuffleAnswer, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableSynopsis, }: Props): React.JSX.Element;
