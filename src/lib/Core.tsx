@@ -2,10 +2,10 @@ import React, {
   useState, useEffect, useCallback, Fragment,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import QuizResultFilter from './core-components/QuizResultFilter.jsx';
-import { selectAnswer, rawMarkup } from './core-components/helpers.js';
-import InstantFeedback from './core-components/InstantFeedback.jsx';
-import Explanation from './core-components/Explanation.jsx';
+import QuizResultFilter from './core-components/QuizResultFilter';
+import { selectAnswer, rawMarkup } from './core-components/helpers';
+import InstantFeedback from './core-components/InstantFeedback';
+import Explanation from './core-components/Explanation';
 import { QuestionType, Question, AnswerType } from './Quiz';
 import { Locale } from './Locale';
 import { number } from 'prop-types';
@@ -14,13 +14,13 @@ interface CoreProps {
   questions: Question[],
   appLocale: Locale,
   showDefaultResult?: boolean,
-  showInstantFeedback: boolean,
+  showInstantFeedback?: boolean,
   continueTillCorrect?: boolean,
   revealAnswerOnSubmit?: boolean,
   allowNavigation?: boolean,
-  onQuestionSubmit: (obj: any) => {}
-  onComplete: (questionSummary: QuestionSummary) => {},
-  customResultPage: (questionSummary: QuestionSummary) => React.JSX.Element,
+  onQuestionSubmit: (obj: any) => void,
+  onComplete: (questionSummary: QuestionSummary) => void,
+  customResultPage?: (questionSummary: QuestionSummary) => React.JSX.Element,
 }
 
 export type QuestionSummary = {

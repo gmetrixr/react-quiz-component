@@ -1,20 +1,14 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import quiz from './quiz';
-import Quiz from '../../dist/index.es';
+import Quiz from '../lib/Quiz';
+import { QuestionSummary } from '../lib/Core';
 
 const container = document.getElementById('app');
-const root = createRoot(container);
-
-function resultPage(obj) {
-  console.log(obj, 'result');
-  return (
-    <div>This will be  a result page</div>
-  );
-}
+const root = createRoot(container as Element);
 
 function App() {
-  const [quizResult, setQuizResult] = useState();
+  const [quizResult, setQuizResult] = useState<QuestionSummary>();
 
   return (
     <div style={{ margin: 'auto', width: '500px' }}>
@@ -24,7 +18,7 @@ function App() {
       // shuffleAnswer
       // showInstantFeedback
       // continueTillCorrect
-        onComplete={setQuizResult}
+        onComplete={(questionSummary: QuestionSummary) => setQuizResult(questionSummary)}
         onQuestionSubmit={(obj) => console.log('user question results:', obj)}
         disableSynopsis
         revealAnswerOnSubmit

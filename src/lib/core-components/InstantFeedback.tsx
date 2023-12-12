@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import Explanation from './Explanation.jsx';
-import { Question } from '../Quiz.js';
+import Explanation from './Explanation';
+import { Question } from '../Quiz';
 
 const renderMessageForCorrectAnswer = (question : Question) => {
   const defaultMessage = 'You are correct. Please click Next to continue.';
@@ -13,7 +13,7 @@ const renderMessageForIncorrectAnswer = (question: Question) => {
 };
 
 interface InstantFeedbackProps {
-  showInstantFeedback: boolean,
+  showInstantFeedback?: boolean,
   incorrectAnswer: boolean,
   correctAnswer: boolean,
   question: Question,
