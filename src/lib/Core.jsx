@@ -61,7 +61,7 @@ function Core({
         } else {
           let exactMatch = true;
           for (let j = 0; j < input.length; j += 1) {
-            if (!correctAnswer.includes(input[j])) {
+            if (!correctAnswer.includes(input[j] + 1)) {
               incorrectTmp.push(i);
               exactMatch = false;
               break;
@@ -85,7 +85,7 @@ function Core({
 
         totalPointsTemp += point;
 
-        if (correct.includes(i)) {
+        if (correctTmp.includes(i)) {
           correctPointsTemp += point;
         }
       }
@@ -195,7 +195,7 @@ function Core({
   const renderQuizResultQuestions = useCallback(() => {
     let filteredQuestions;
     let filteredUserInput;
-
+    console.log(questionSummary);
     if (filteredValue !== 'all') {
       if (filteredValue === 'correct') {
         filteredQuestions = questions.filter((question, index) => correct.indexOf(index) !== -1);

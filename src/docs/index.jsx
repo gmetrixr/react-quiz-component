@@ -20,16 +20,15 @@ function App() {
     <div style={{ margin: 'auto', width: '500px' }}>
       <Quiz
         quiz={quiz}
-        shuffle
-        shuffleAnswer
+      // shuffle
+      // shuffleAnswer
       // showInstantFeedback
       // continueTillCorrect
         onComplete={setQuizResult}
         onQuestionSubmit={(obj) => console.log('user question results:', obj)}
         disableSynopsis
         revealAnswerOnSubmit
-        customResultPage={resultPage}
-        showDefaultResult={false}
+      // customResultPage={resultPage}
       />
     </div>
   );
