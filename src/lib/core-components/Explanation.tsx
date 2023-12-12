@@ -1,6 +1,7 @@
 import React from 'react';
+import { Question } from '../Quiz';
 
-function Explanation({ question, isResultPage }) {
+function Explanation({ question, isResultPage } : { question: Question, isResultPage: boolean}) {
   const { explanation } = question;
 
   if (!explanation) {

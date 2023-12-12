@@ -1,14 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Locale } from '../Locale';
 
-function QuizResultFilter({ filteredValue, handleChange, appLocale }) {
+interface QuizResultFilter {
+  filteredValue: any,
+  handleChange: any,
+  appLocale: Locale
+}
+
+function QuizResultFilter({ filteredValue, handleChange, appLocale } : QuizResultFilter) {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (value) => {
+  const handleOptionClick = (value: string) => {
     handleChange({ target: { value } });
     setIsOpen(false);
   };
@@ -16,8 +23,8 @@ function QuizResultFilter({ filteredValue, handleChange, appLocale }) {
   const selectedOptionClass = isOpen ? 'selected-open' : '';
 
   useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (isOpen && dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (isOpen && dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
