@@ -375,19 +375,30 @@ function Core({
                 {appLocale.prevQuestionBtn}
               </button>
             )}
-            <button
-              onClick={() => {
-                if (currentAnswer.index) {
-                  submitAnswer();
+            <div className="navContainer">
+              <button
+                onClick={() => {
+                  if (currentAnswer.index) {
+                    submitAnswer();
+                    nextQuestion(currentQuestionIndex);
+                    resetAnswer();
+                  }
+                }}
+                className="nextQuestionBtn btn"
+                type="button"
+              >
+                {appLocale.nextQuestionBtn}
+              </button>
+              <button
+                onClick={() => {
                   nextQuestion(currentQuestionIndex);
-                  resetAnswer();
-                }
-              }}
-              className="nextQuestionBtn btn"
-              type="button"
-            >
-              {appLocale.nextQuestionBtn}
-            </button>
+                }}
+                className="skibBtn btn"
+                type="button"
+              >
+                Skip
+              </button>
+            </div>
           </div>
           )}
         </div>

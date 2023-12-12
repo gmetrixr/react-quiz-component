@@ -158,6 +158,12 @@
   justify-content: space-between;
 }
 
+.react-quiz-container .navContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .react-quiz-container .quiz-result-filter {
   position: relative;
   width: 120px;
