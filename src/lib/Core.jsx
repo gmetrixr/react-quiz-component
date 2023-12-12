@@ -47,6 +47,34 @@ function Core({
 
   useEffect(() => {
     if (endQuiz) {
+      const correctTmp = [];
+      const incorrectTmp = [];
+      for (let i = 0; i < questions.length; i += 1) {
+        const input = userInput[i];
+        const { correctAnswer, questionType } = questions[i];
+        if (questionType === 'single') {
+          if (input === Number(correctAnswer)) {
+            correctTmp.push(i);
+          } else {
+            incorrectTmp.push(i);
+          }
+        } else {
+          let exactMatch = true;
+          for (let j = 0; j < input.length; j += 1) {
+            if (!correctAnswer.includes(input[j])) {
+              incorrectTmp.push(i);
+              exactMatch = false;
+              break;
+            }
+          }
+          if (exactMatch) {
+            correctTmp.push(i);
+          }
+        }
+      }
+      setCorrect(correctTmp);
+      setIncorrect(incorrectTmp);
+
       let totalPointsTemp = 0;
       let correctPointsTemp = 0;
       for (let i = 0; i < questions.length; i += 1) {
