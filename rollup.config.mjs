@@ -68,7 +68,7 @@ export default [
     ],
   },
   {
-    input: './dist/dts/Quiz.d.ts',
+    input: './dist/dts/lib/Quiz.d.ts',
     external: [/\.css$/],
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
     plugins: [dts()],
