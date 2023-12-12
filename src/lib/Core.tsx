@@ -18,12 +18,12 @@ interface CoreProps {
   continueTillCorrect?: boolean,
   revealAnswerOnSubmit?: boolean,
   allowNavigation?: boolean,
-  onQuestionSubmit: () => {}
+  onQuestionSubmit: (obj: any) => {}
   onComplete: (questionSummary: QuestionSummary) => {},
   customResultPage: (questionSummary: QuestionSummary) => React.JSX.Element,
 }
 
-type QuestionSummary = {
+export type QuestionSummary = {
   numberOfQuestions?: number,
   numberOfCorrectAnswers?: number,
   numberOfIncorrectAnswers?: number,

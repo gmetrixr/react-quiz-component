@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Core from './Core.jsx';
+import Core, { QuestionSummary } from './Core.jsx';
 import defaultLocale, { Locale } from './Locale.jsx';
 import './styles.css';
 import { number } from 'prop-types';
-
-
 export type QuestionType = "text" | "photo";
 export type AnswerType = "single" | "multiple";
 
@@ -42,13 +40,13 @@ export type Props = {
   shuffle?: boolean,
   shuffleAnswer?: boolean,
   showDefaultResult?: boolean,
-  onComplete?: () => {},
+  onComplete: (questionSummary : QuestionSummary) => {},
   customResultPage: any,
-  showInstantFeedback?: boolean,
+  showInstantFeedback: boolean,
   continueTillCorrect?: boolean,
   revealAnswerOnSubmit?: boolean,
   allowNavigation?: boolean,
-  onQuestionSubmit?: (obj: any) => {},
+  onQuestionSubmit: (obj: any) => {},
   disableSynopsis?: boolean,
 };
 

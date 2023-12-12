@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import Quiz from '../lib/Quiz';
 import quiz from './quiz';
+import Quiz from '../../dist/index.es';
 
 const container = document.getElementById('app');
 const root = createRoot(container);
