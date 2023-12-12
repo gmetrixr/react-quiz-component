@@ -71,7 +71,11 @@
   cursor: pointer;
 }
 
-.react-quiz-container .nextQuestionBtn {
+.react-quiz-container .answerBtn:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.react-quiz-container .nextQuestionBtn, .react-quiz-container .skibBtn {
   padding: 10px 50px 8px;
   background-color: #fff;
   opacity: 0.8;
@@ -85,14 +89,19 @@
   font-size: 15px;
 }
 
-.react-quiz-container .skibBtn {
+.react-quiz-container .answerItem {
+  display: flex;
+  align-items: center;
+}
+
+/* .react-quiz-container .skibBtn {
   color: #1A222E;
   cursor: pointer;
   font-size: 12px;
   text-decoration: 0.1s ease-in-out;
   background: unset;
   border: unset;
-}
+} */
 
 .react-quiz-container .questionWrapper .btn.correct {
   background: green;
