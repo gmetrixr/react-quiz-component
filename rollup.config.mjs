@@ -5,6 +5,9 @@ import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import replace from '@rollup/plugin-replace';
+import typescript from '@rollup/plugin-typescript';
+import types from 'rollup-plugin-postcss';
+import dts from 'rollup-plugin-dts';
 
 const globals = {
   react: 'React',
@@ -16,7 +19,8 @@ const extensions = ['.ts', '.tsx', '.js', '.jsx'];
 
 export default [
   {
-    input: './src/lib/Quiz.jsx',
+    input: './src/lib/Quiz.tsx',
+    external: Object.keys(globals),
     output: [
       {
         file: 'dist/index.js',
@@ -30,9 +34,9 @@ export default [
         globals,
       },
     ],
-    external: Object.keys(globals),
     plugins: [
       peerDepsExternal(),
+      typescript(),
       nodeResolve({
         modulePaths: ['./src/lib/'],
         browser: true,
@@ -62,5 +66,11 @@ export default [
       }),
       terser(),
     ],
+  },
+  {
+    input: './dist/dts/Quiz.d.ts',
+    external: [/\.css$/],
+    output: [{ file: 'dist/index.d.ts', format: 'es' }],
+    plugins: [dts()],
   },
 ];

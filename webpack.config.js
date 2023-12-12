@@ -4,10 +4,13 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: path.join(__dirname, 'src/docs'),
+  entry: path.join(__dirname, 'src/docs', 'index.tsx'),
   output: {
     path: path.join(__dirname, 'docs'),
     filename: 'bundle.js',
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json'],
   },
   devtool: 'eval-cheap-module-source-map', // dev only
   module: {
@@ -20,6 +23,11 @@ module.exports = {
       {
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
     ],
@@ -36,9 +44,6 @@ module.exports = {
       '...',
       new CssMinimizerPlugin(),
     ],
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx'],
   },
   devServer: {
     static: path.join(__dirname, 'docs'),

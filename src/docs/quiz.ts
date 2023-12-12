@@ -1,13 +1,15 @@
+import { QuizProps } from "../lib/Quiz";
+
 const segment = {
   basic: 'Basic',
   medium: 'Medium',
   advanced: 'Advanced',
 };
 
-const quiz = {
+const quiz : QuizProps = {
   quizTitle: 'React Quiz Component Demo',
   quizSynopsis: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim',
-  nrOfQuestions: '6',
+  nrOfQuestions: 6,
   questions: [
     {
       question: 'How can you access the state of a component from inside of a member function?',
@@ -20,11 +22,11 @@ const quiz = {
         'this.state',
         'this.values',
       ],
-      correctAnswer: '3',
+      correctAnswer: 3,
       messageForCorrectAnswer: 'Correct answer. Good job.',
       messageForIncorrectAnswer: 'Incorrect answer. Please try again.',
       explanation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      point: '20',
+      point: 20,
       segment: segment.advanced,
     },
     {
@@ -35,11 +37,11 @@ const quiz = {
         'Google Engineers',
         'Facebook Engineers',
       ],
-      correctAnswer: '2',
+      correctAnswer: 2,
       messageForCorrectAnswer: 'Correct answer. Good job.',
       messageForIncorrectAnswer: 'Incorrect answer. Please try again.',
       explanation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      point: '20',
+      point: 20,
       segment: segment.basic,
     },
     {
@@ -50,11 +52,12 @@ const quiz = {
         'True',
         'False',
       ],
-      correctAnswer: '2',
+      correctAnswer: 2,
       messageForCorrectAnswer: 'Correct answer. Good job.',
       messageForIncorrectAnswer: 'Incorrect answer. Please try again.',
       explanation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      point: '10',
+      point: 10,
+      segment: segment.basic
     },
     {
       question: 'Which of the following concepts is/are key to ReactJS?',
@@ -65,11 +68,11 @@ const quiz = {
         'Event delegation model',
         'Both of the above',
       ],
-      correctAnswer: '3',
+      correctAnswer: 3,
       messageForCorrectAnswer: 'Correct answer. Good job.',
       messageForIncorrectAnswer: 'Incorrect answer. Please try again.',
       explanation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      point: '30',
+      point: 30,
       segment: segment.medium,
     },
     {
@@ -82,11 +85,12 @@ const quiz = {
         'https://github.com/wingkwong/react-quiz-component/assets/35857179/64da0348-30b7-4a13-9fea-791537c49109',
         'https://github.com/wingkwong/react-quiz-component/assets/35857179/660e9255-8a16-4e0f-a7e4-81ba6ac0f9bc',
       ],
-      correctAnswer: '1',
+      correctAnswer: 1,
       messageForCorrectAnswer: 'Correct answer. Good job.',
       messageForIncorrectAnswer: 'Incorrect answer. Please try again.',
       explanation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      point: '20',
+      point: 20,
+      segment: segment.basic
     },
     {
       question: 'What are the advantages of React JS?',
@@ -102,7 +106,8 @@ const quiz = {
       messageForCorrectAnswer: 'Correct answer. Good job.',
       messageForIncorrectAnswer: 'Incorrect answer. Please try again.',
       explanation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      point: '20',
+      point: 20,
+      segment: segment.basic
     },
   ],
 };
