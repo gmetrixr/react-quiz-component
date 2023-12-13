@@ -9,7 +9,7 @@ const root = createRoot(container as Element);
 
 function App() {
   const [quizResult, setQuizResult] = useState<QuestionSummary>();
-
+  
   return (
     <div style={{ margin: 'auto', width: '500px' }}>
       <Quiz
@@ -18,10 +18,14 @@ function App() {
       // shuffleAnswer
       // showInstantFeedback
       // continueTillCorrect
-        onComplete={(questionSummary: QuestionSummary) => setQuizResult(questionSummary)}
+        onComplete={(questionSummary: QuestionSummary) => {
+          console.log(`Quiz Complete`, questionSummary)
+          setQuizResult(questionSummary)
+        }}
         onQuestionSubmit={(obj) => console.log('user question results:', obj)}
         disableSynopsis
         revealAnswerOnSubmit
+        disableRenderTags
       // customResultPage={resultPage}
       />
     </div>

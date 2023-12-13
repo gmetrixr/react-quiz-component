@@ -18,6 +18,7 @@ interface CoreProps {
   continueTillCorrect?: boolean,
   revealAnswerOnSubmit?: boolean,
   allowNavigation?: boolean,
+  disableRenderTags?: boolean,
   onQuestionSubmit: (obj: any) => void,
   onComplete: (questionSummary: QuestionSummary) => void,
   customResultPage?: (questionSummary: QuestionSummary) => React.JSX.Element,
@@ -40,10 +41,38 @@ interface CurrentAnswer {
   selectedOptions?: number[]
 }
 
+
+const _CustomRadio = ({ active, type } : { active: boolean, type: AnswerType}) => {
+  const obj = {
+    "single": {
+      "true": "https://s.vrgmetri.com/gb-web/fv4/common/images/viewer/icons/RadioActive.png",
+      "false": "https://s.vrgmetri.com/gb-web/fv4/common/images/viewer/icons/RadioInactive.png"
+    },
+    "multiple": {
+      "true": "https://s.vrgmetri.com/gb-web/fv4/common/images/viewer/icons/CheckboxActive.png",
+      "false": "https://s.vrgmetri.com/gb-web/fv4/common/images/viewer/icons/CheckboxInactive.png"
+    }
+  }
+  const imgSrc = obj[type][`${active}`];
+  return (
+    <img 
+      style={{
+        flex: 0,
+        marginRight: "20px"
+      }} 
+      src={imgSrc}
+      width="18" 
+      height="19" 
+      alt="">  
+    </img>
+  );
+};
+const CustomRadio = React.memo(_CustomRadio);
+
 function Core({
   questions, appLocale, showDefaultResult, onComplete, customResultPage,
   showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation,
-  onQuestionSubmit,
+  onQuestionSubmit, disableRenderTags
 } : CoreProps) : React.JSX.Element {
   const [incorrectAnswer, setIncorrectAnswer] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
@@ -93,15 +122,19 @@ function Core({
           }
         } else {
           let exactMatch = true;
-          for (let j = 0; j < input.length; j += 1) {
-            if (!correctAnswer.includes(input[j] + 1)) {
-              incorrectTmp.push(i);
-              exactMatch = false;
-              break;
+          if(input) {
+            for (let j = 0; j < input.length; j += 1) {
+              if (!correctAnswer.includes(input[j] + 1)) {
+                incorrectTmp.push(i);
+                exactMatch = false;
+                break;
+              }
             }
-          }
-          if (exactMatch) {
-            correctTmp.push(i);
+            if (exactMatch) {
+              correctTmp.push(i);
+            } else {
+              incorrectTmp.push(i);
+            }
           }
         }
       }
@@ -169,7 +202,7 @@ function Core({
     const { answers, correctAnswer, questionType } = question;
     let { answerSelectionType } = question;
     let answerBtnCorrectClassName;
-    let answerBtnIncorrectClassName;
+    let answerBtnIncorrectClassName : string;
 
     // Default single to avoid code breaking due to automatic version upgrade
     answerSelectionType = answerSelectionType || 'single';
@@ -182,7 +215,9 @@ function Core({
       } else {
         // correctAnswer - is array of numbers
         answerBtnCorrectClassName = (correctAnswer.includes(index + 1) ? 'correct' : '');
-        answerBtnIncorrectClassName = (!correctAnswer.includes(index + 1) && userInputIndex.includes(index + 1) ? 'incorrect' : '');
+        if(userInputIndex) {
+          answerBtnIncorrectClassName = (!correctAnswer.includes(index + 1) && userInputIndex.includes(index + 1) ? 'incorrect' : '');
+        }
       }
 
       return (
@@ -224,7 +259,6 @@ function Core({
   const renderQuizResultQuestions = useCallback(() => {
     let filteredQuestions: Question[] | undefined;
     let filteredUserInput: (number | number[])[];
-    console.log(questionSummary);
     if (filteredValue !== 'all') {
       if (filteredValue === 'correct') {
         filteredQuestions = questions.filter((question, index) => correct.indexOf(index) !== -1);
@@ -234,7 +268,6 @@ function Core({
         filteredUserInput = userInput.filter((input, index) => incorrect.indexOf(index) !== -1);
       }
     }
-
     return (filteredQuestions || questions).map((question, index) => {
       const userInputIndex = filteredUserInput ? filteredUserInput[index] : userInput[index];
 
@@ -309,7 +342,7 @@ function Core({
 
   const renderAnswers = (question:Question, answerButtons:any) => {
     const {
-      answers, correctAnswer, questionType, questionIndex,
+      answers, correctAnswer, questionType, questionIndex
     } = question;
     let { answerSelectionType } = question;
     const handleClick = (index: number) => {
@@ -336,10 +369,10 @@ function Core({
     const isCurrentAnswer = (index: number) => {
       // console.log(userInput);
       if (answerSelectionType === 'single') {
-        return currentAnswer.index === index + 1 ? 'neutral' : 'what?';
+        return currentAnswer.index === index + 1;
       }
-      if (!currentAnswer.selectedOptions) return 'noooo';
-      return currentAnswer.selectedOptions.includes(index) ? 'neutral' : 'what?';
+      if (!currentAnswer.selectedOptions) return false
+      return currentAnswer.selectedOptions.includes(index);
     };
 
     const checkSelectedAnswer = (index: number) => {
@@ -364,28 +397,17 @@ function Core({
       <div className='answersList'>
         {answers.map((answer, index) => {
           return (<Fragment key={uuidv4()}>
-            {(answerButtons[index] !== undefined)
-              ? (
-                <button
-                  type="button"
-                  disabled={answerButtons[index].disabled || false}
-                  className={`${answerButtons[index].className} ${isCurrentAnswer(index)} answerBtn btn`}
-                  onClick={() => handleClick(index)}
-                >
-                  {questionType === 'text' && <span>{answer}</span>}
-                  {questionType === 'photo' && <img src={answer} alt="answer" />}
-                </button>
-              )
-              : (
                 <button
                   type="button"
                   onClick={() => handleClick(index)}
-                  className={`answerBtn btn ${isCurrentAnswer(index)}  ${(allowNavigation && checkSelectedAnswer(index + 1)) ? 'selected' : null}`}
-                >
-                  {questionType === 'text' && answer}
-                  {questionType === 'photo' && <img src={answer} alt="answer" />}
+                  className={`answerBtn btn  ${(allowNavigation && checkSelectedAnswer(index + 1)) ? 'selected' : null}`}
+                > 
+                  <div className='answerItem'>
+                    <CustomRadio active={isCurrentAnswer(index)} type={answerSelectionType} />
+                    <div>{questionType === 'text' && answer}</div>
+                    <div>{questionType === 'photo' && <img src={answer} alt="answer" />}</div>
+                  </div>
                 </button>
-              )}
           </Fragment>);
         })}
       </div>
@@ -434,7 +456,7 @@ function Core({
           <h3 className='question' dangerouslySetInnerHTML={rawMarkup(`${activeQuestion && activeQuestion.question} ${appLocale.marksOfQuestion.replace('<marks>', String(activeQuestion.point))}`)} />
 
           {activeQuestion && activeQuestion.questionPic && <img src={activeQuestion.questionPic} alt="question" />}
-          {activeQuestion && renderTags(answerSelectionTypeState, activeQuestion.correctAnswer, activeQuestion.segment)}
+          {!disableRenderTags && activeQuestion && renderTags(answerSelectionTypeState, activeQuestion.correctAnswer, activeQuestion.segment)}
           {activeQuestion && renderAnswers(activeQuestion, buttons)}
           {(true || showNextQuestionButton || allowNavigation)
           && (
