@@ -52,6 +52,11 @@ const QuestionComponent = ({
 
   const handleNext = () => {
     let result = isCurrentAnswerCorrect();
+    if(!showInstantFeedback) {
+      if(selectedOptions.length > 0) {
+        return onNextQuestion(qObj, result);
+      }
+    }
     if(showInstantFeedback) {
       if(reveal) {
         return onNextQuestion(qObj, result);
@@ -63,6 +68,7 @@ const QuestionComponent = ({
   };
 
   const isNextAllowed = () => {
+    if(!showInstantFeedback) return selectedOptions.length > 0;
     let result = isCurrentAnswerCorrect();
     if(showInstantFeedback) {
       if(reveal) {

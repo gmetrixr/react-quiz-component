@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import quiz from './quiz';
-import Quiz from '../lib/Quiz';
-import { QuestionSummary } from '../lib/Core';
+import Quiz, { QuestionSummary } from '../lib/Quiz';
 import { onQuestionSubmitProps } from '../../dist';
 
 const container = document.getElementById('app');
@@ -17,7 +16,7 @@ function App() {
         quiz={quiz}
       // shuffle
       // shuffleAnswer
-        // showInstantFeedback
+        showInstantFeedback
       // continueTillCorrect
         onComplete={(questionSummary: QuestionSummary) => {
           console.log(`Quiz Complete`, questionSummary)
