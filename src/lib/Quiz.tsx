@@ -26,7 +26,7 @@ export type Question = {
   explanation?: string;
   point: number;
   questionIndex?: number;
-  segment: string;
+  segment?: string;
 };
 
 export type QuizProps = {

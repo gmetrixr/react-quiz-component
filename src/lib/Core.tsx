@@ -282,7 +282,7 @@ function Core({
           {renderTags(
             answerSelectionType,
             question.correctAnswer,
-            question.segment
+            question.segment || "basic"
           )}
           <div className="result-answer">
             {renderAnswerInResult(question, userInputIndex)}
