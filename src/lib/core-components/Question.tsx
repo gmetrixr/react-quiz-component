@@ -45,7 +45,7 @@ const QuestionComponent = ({
     if(selectedOptions.length === 0) return false;
     if(qObj.correctAnswer.length !== selectedOptions.length) return false;
     for(let i=0; i< qObj.correctAnswer.length; i++) {
-      if(!selectedOptions.includes(qObj.correctAnswer[i]-1)) return false;
+      if(!selectedOptions.includes(qObj.correctAnswer[i])) return false;
     }
     return true;
   };
@@ -82,7 +82,7 @@ const QuestionComponent = ({
   };
 
   const isSelected = (index: number) => selectedOptions.includes(index);
-  const isCorrect = (index: number) => qObj.correctAnswer.includes(index + 1);
+  const isCorrect = (index: number) => qObj.correctAnswer.includes(index);
 
   const getAnswerState = (index: number) => {
     if(showInstantFeedback) {
