@@ -17,7 +17,7 @@ function App() {
         quiz={quiz}
       // shuffle
       // shuffleAnswer
-      // showInstantFeedback
+        showInstantFeedback
       // continueTillCorrect
         onComplete={(questionSummary: QuestionSummary) => {
           console.log(`Quiz Complete`, questionSummary)

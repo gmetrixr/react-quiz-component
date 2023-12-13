@@ -4,6 +4,16 @@
   color: rgb(33, 37, 41);
 }
 
+.react-quiz-container .correctBorder {
+  border: 2px dotted green !important;
+}
+
+
+.react-quiz-container .wrongBorder {
+  border: 2px dotted red !important;
+}
+
+
 .react-quiz-container .questionWrapper .btn {
   /* margin-top: 10px;
   margin-bottom: 10px;
@@ -41,6 +51,26 @@
 
 .react-quiz-container .answersList > button:last-child {
   margin-bottom: 0;
+}
+
+.react-quiz-container .btn {
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: unset;
+}
+
+.react-quiz-container .btn:active, 
+.react-quiz-container .btn:focus-visible
+{
+  border: unset;
+  outline: unset;
+}
+
+.react-quiz-container .disabled {
+  cursor: not-allowed !important;
 }
 
 .react-quiz-container .btn {

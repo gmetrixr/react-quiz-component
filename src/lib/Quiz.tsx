@@ -20,7 +20,7 @@ export type Question = {
   questionPic?: string;
   answerSelectionType: AnswerType;
   answers: string[];
-  correctAnswer: number | number[];
+  correctAnswer: number[];
   messageForCorrectAnswer?: string;
   messageForIncorrectAnswer?: string;
   explanation?: string;
@@ -85,45 +85,46 @@ function Quiz({
 
   // Shuffle answers funtion here
   const shuffleAnswerSequence = (oldQuestions: Question[] = []): Question[] => {
-    const newQuestions = oldQuestions.map((question) => {
-      const answerWithIndex: [string, number][] = question.answers?.map(
-        (ans, i) => [ans, i]
-      );
-      const shuffledAnswersWithIndex = answerWithIndex.sort(
-        () => Math.random() - 0.5
-      );
-      const shuffledAnswers = shuffledAnswersWithIndex.map((ans) => ans[0]);
-      if (question.answerSelectionType === "single") {
-        const oldCorrectAnswer = question.correctAnswer;
-        const newCorrectAnswer =
-          shuffledAnswersWithIndex.findIndex(
-            (ans) => `${ans[1] + 1}` === `${oldCorrectAnswer}`
-          ) + 1;
-        return {
-          ...question,
-          correctAnswer: newCorrectAnswer,
-          answers: shuffledAnswers,
-        };
-      }
-      if (question.answerSelectionType === "multiple") {
-        const oldCorrectAnswer = question.correctAnswer;
-        if (typeof oldCorrectAnswer !== "number") {
-          const newCorrectAnswer = oldCorrectAnswer.map(
-            (cans) =>
-              shuffledAnswersWithIndex.findIndex(
-                (ans) => `${ans[1] + 1}` === `${cans}`
-              ) + 1
-          );
-          return {
-            ...question,
-            correctAnswer: newCorrectAnswer,
-            answers: shuffledAnswers,
-          };
-        }
-      }
-      return question;
-    });
-    return newQuestions;
+    return oldQuestions;
+    // const newQuestions = oldQuestions.map((question) => {
+    //   const answerWithIndex: [string, number][] = question.answers?.map(
+    //     (ans, i) => [ans, i]
+    //   );
+    //   const shuffledAnswersWithIndex = answerWithIndex.sort(
+    //     () => Math.random() - 0.5
+    //   );
+    //   const shuffledAnswers = shuffledAnswersWithIndex.map((ans) => ans[0]);
+    //   if (question.answerSelectionType === "single") {
+    //     const oldCorrectAnswer = question.correctAnswer;
+    //     const newCorrectAnswer =
+    //       shuffledAnswersWithIndex.findIndex(
+    //         (ans) => `${ans[1] + 1}` === `${oldCorrectAnswer}`
+    //       ) + 1;
+    //     return {
+    //       ...question,
+    //       correctAnswer: newCorrectAnswer,
+    //       answers: shuffledAnswers,
+    //     };
+    //   }
+    //   if (question.answerSelectionType === "multiple") {
+    //     const oldCorrectAnswer = question.correctAnswer;
+    //     if (typeof oldCorrectAnswer !== "number") {
+    //       const newCorrectAnswer = oldCorrectAnswer.map(
+    //         (cans) =>
+    //           shuffledAnswersWithIndex.findIndex(
+    //             (ans) => `${ans[1] + 1}` === `${cans}`
+    //           ) + 1
+    //       );
+    //       return {
+    //         ...question,
+    //         correctAnswer: newCorrectAnswer,
+    //         answers: shuffledAnswers,
+    //       };
+    //     }
+    //   }
+    //   return question;
+    // });
+    // return newQuestions;
   };
   const shuffleQuestions = useCallback((q: Question[]) => {
     for (let i = q.length - 1; i > 0; i -= 1) {

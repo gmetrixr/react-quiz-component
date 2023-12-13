@@ -1,13 +1,24 @@
 import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { v4 as uuidv4 } from "uuid";
 import QuizResultFilter from "./core-components/QuizResultFilter";
-import { selectAnswer, rawMarkup } from "./core-components/helpers";
+import { rawMarkup } from "./core-components/helpers";
 import InstantFeedback from "./core-components/InstantFeedback";
 import Explanation from "./core-components/Explanation";
-import { QuestionType, Question, AnswerType } from "./Quiz";
+import {
+  QuestionType,
+  Question,
+  AnswerType,
+  onQuestionSubmitProps,
+} from "./Quiz";
 import { Locale } from "./Locale";
 import { number } from "prop-types";
-import { onQuestionSubmitProps } from "../../dist";
+import QuestionComponent from "./core-components/Question";
+
+enum AnswerFinalState {
+  correct = "correct",
+  wrong = "wrong",
+  skipped = 'skipped'
+}
 
 interface CoreProps {
   questions: Question[];
@@ -19,7 +30,7 @@ interface CoreProps {
   allowNavigation?: boolean;
   disableRenderTags?: boolean;
   allowSkip?: boolean;
-  onQuestionSubmit: (obj: onQuestionSubmitProps) => void;
+  onQuestionSubmit: (questionResult: onQuestionSubmitProps) => void;
   onComplete: (questionSummary: QuestionSummary) => void;
   customResultPage?: (questionSummary: QuestionSummary) => React.JSX.Element;
 }
@@ -28,53 +39,17 @@ export type QuestionSummary = {
   numberOfQuestions?: number;
   numberOfCorrectAnswers?: number;
   numberOfIncorrectAnswers?: number;
+  numberOfSkippedAnswers?: number;
   questions?: Question[];
-  userInput?: (number | number[])[];
-  totalPoints?: number;
-  correctPoints?: number;
+  finalAnswers?: AnswerFinalState[];
 };
 
 interface CurrentAnswer {
   index?: number;
-  correctAnswer?: number | number[];
+  correctAnswer?: number[];
   answerSelectionType?: AnswerType;
   selectedOptions?: number[];
 }
-
-const _CustomRadio = ({
-  active,
-  type,
-}: {
-  active: boolean;
-  type: AnswerType;
-}) => {
-  const obj = {
-    single: {
-      true: "https://s.vrgmetri.com/gb-web/fv4/common/images/viewer/icons/RadioActive.png",
-      false:
-        "https://s.vrgmetri.com/gb-web/fv4/common/images/viewer/icons/RadioInactive.png",
-    },
-    multiple: {
-      true: "https://s.vrgmetri.com/gb-web/fv4/common/images/viewer/icons/CheckboxActive.png",
-      false:
-        "https://s.vrgmetri.com/gb-web/fv4/common/images/viewer/icons/CheckboxInactive.png",
-    },
-  };
-  const imgSrc = obj[type][`${active}`];
-  return (
-    <img
-      style={{
-        flex: 0,
-        marginRight: "20px",
-      }}
-      src={imgSrc}
-      width="18"
-      height="19"
-      alt=""
-    ></img>
-  );
-};
-const CustomRadio = React.memo(_CustomRadio);
 
 function Core({
   questions,
@@ -98,13 +73,14 @@ function Core({
   const [buttons, setButtons] = useState({});
   const [correct, setCorrect] = useState<number[]>([]);
   const [incorrect, setIncorrect] = useState<number[]>([]);
-  const [userInput, setUserInput] = useState<(number | number[])[]>([]);
+  const [userInput, setUserInput] = useState<number[][]>([]);
   const [filteredValue, setFilteredValue] = useState("all");
   const [userAttempt, setUserAttempt] = useState(1);
   const [showDefaultResultState, setShowDefaultResult] = useState(true);
   const [answerSelectionTypeState, setAnswerSelectionType] =
     useState<AnswerType>(AnswerType.single);
 
+  const [finalAnswers, setFinalAnswers] = useState<AnswerFinalState[]>([]);
   const [totalPoints, setTotalPoints] = useState(0);
   const [correctPoints, setCorrectPoints] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(
@@ -129,65 +105,15 @@ function Core({
   }, [activeQuestion, currentQuestionIndex]);
 
   useEffect(() => {
-    if (endQuiz) {
-      const correctTmp = [];
-      const incorrectTmp = [];
-      for (let i = 0; i < questions.length; i += 1) {
-        const input = userInput[i];
-        const { correctAnswer, questionType } = questions[i];
-        if (typeof input === "number" || typeof correctAnswer === "number") {
-          if (input === Number(correctAnswer)) {
-            correctTmp.push(i);
-          } else {
-            incorrectTmp.push(i);
-          }
-        } else {
-          let exactMatch = true;
-          if (input) {
-            for (let j = 0; j < input.length; j += 1) {
-              if (!correctAnswer.includes(input[j] + 1)) {
-                incorrectTmp.push(i);
-                exactMatch = false;
-                break;
-              }
-            }
-            if (exactMatch) {
-              correctTmp.push(i);
-            } else {
-              incorrectTmp.push(i);
-            }
-          }
-        }
-      }
-      setCorrect(correctTmp);
-      setIncorrect(incorrectTmp);
-
-      let totalPointsTemp = 0;
-      let correctPointsTemp = 0;
-      for (let i = 0; i < questions.length; i += 1) {
-        let point = questions[i].point || 0;
-        totalPointsTemp += point;
-
-        if (correctTmp.includes(i)) {
-          correctPointsTemp += point;
-        }
-      }
-      setTotalPoints(totalPointsTemp);
-      setCorrectPoints(correctPointsTemp);
-    }
-  }, [endQuiz]);
-
-  useEffect(() => {
     setQuestionSummary({
       numberOfQuestions: questions.length,
-      numberOfCorrectAnswers: correct.length,
-      numberOfIncorrectAnswers: incorrect.length,
+      numberOfCorrectAnswers: finalAnswers.filter(a => a === AnswerFinalState.correct).length,
+      numberOfIncorrectAnswers: finalAnswers.filter(a => a === AnswerFinalState.wrong).length,
+      numberOfSkippedAnswers: finalAnswers.filter(a => a === AnswerFinalState.skipped).length,
       questions,
-      userInput,
-      totalPoints,
-      correctPoints,
+      finalAnswers
     });
-  }, [totalPoints, correctPoints]);
+  }, [endQuiz]);
 
   useEffect(() => {
     if (endQuiz && onComplete !== undefined && questionSummary !== undefined) {
@@ -223,7 +149,7 @@ function Core({
 
   const renderAnswerInResult = (
     question: Question,
-    userInputIndex: number | number[]
+    userInputIndex: number[]
   ) => {
     const { answers, correctAnswer, questionType } = question;
     let { answerSelectionType } = question;
@@ -240,12 +166,10 @@ function Core({
         typeof userInputIndex === "number"
       ) {
         // correctAnswer - is string
-        answerBtnCorrectClassName =
-          index + 1 === correctAnswer ? "correct" : "";
-        answerBtnIncorrectClassName =
-          userInputIndex !== correctAnswer && index + 1 === userInputIndex
-            ? "incorrect"
-            : "";
+        // answerBtnCorrectClassName = index + 1 === correctAnswer ? "correct" : "";
+        // answerBtnIncorrectClassName = userInputIndex !== correctAnswer && index + 1 === userInputIndex
+        //     ? "incorrect"
+        //     : "";
       } else {
         // correctAnswer - is array of numbers
         answerBtnCorrectClassName = correctAnswer.includes(index + 1)
@@ -265,7 +189,7 @@ function Core({
           <button
             type="button"
             disabled
-            className={`answerBtn btn ${answerBtnCorrectClassName}${answerBtnIncorrectClassName}`}
+            className={`answerBtn btn ${"answerBtnCorrectClassName"}${answerBtnIncorrectClassName}`}
           >
             {questionType === "text" && <span>{answer}</span>}
             {questionType === "photo" && <img src={answer} alt="answer" />}
@@ -277,7 +201,7 @@ function Core({
 
   const renderTags = (
     answerSelectionType: AnswerType,
-    numberOfSelection: number | number[],
+    numberOfSelection: number[],
     segment: string
   ) => {
     const {
@@ -313,7 +237,7 @@ function Core({
 
   const renderQuizResultQuestions = useCallback(() => {
     let filteredQuestions: Question[] | undefined;
-    let filteredUserInput: (number | number[])[];
+    let filteredUserInput: number[][];
     if (filteredValue !== "all") {
       if (filteredValue === "correct") {
         filteredQuestions = questions.filter(
@@ -368,146 +292,6 @@ function Core({
       );
     });
   }, [endQuiz, filteredValue]);
-  const [currentAnswer, setCurrentAnswer] = useState<CurrentAnswer>({});
-  const saveAnswer = ({
-    index,
-    correctAnswer,
-    answerSelectionType,
-    selectedOptions,
-  }: CurrentAnswer) => {
-    if (index !== undefined) {
-      setCurrentAnswer({
-        index: index + 1,
-        correctAnswer,
-        answerSelectionType,
-        selectedOptions,
-      });
-    }
-  };
-  const resetAnswer = () => {
-    setCurrentAnswer({});
-  };
-  const submitAnswer = () => {
-    if (
-      currentAnswer.index !== undefined &&
-      currentAnswer.correctAnswer !== undefined &&
-      currentAnswer.answerSelectionType !== undefined
-    ) {
-      
-      selectAnswer(
-        currentAnswer.index,
-        currentAnswer.correctAnswer,
-        currentAnswer.answerSelectionType,
-        {
-          userInput,
-          userAttempt,
-          currentQuestionIndex,
-          continueTillCorrect,
-          showNextQuestionButton,
-          incorrect,
-          correct,
-          setButtons,
-          setIsCorrect,
-          setIncorrectAnswer,
-          setCorrect,
-          setIncorrect,
-          setShowNextQuestionButton,
-          setUserInput,
-          setUserAttempt,
-        }
-      );
-    }
-    // }
-  };
-
-  const renderAnswers = (question: Question, answerButtons: any) => {
-    const { answers, correctAnswer, questionType, questionIndex } = question;
-    let { answerSelectionType } = question;
-    const handleClick = (index: number) => {
-      if (answerSelectionType === AnswerType.single) {
-        saveAnswer({ index, answerSelectionType, correctAnswer });
-      } else {
-        if (!currentAnswer.selectedOptions)
-          currentAnswer.selectedOptions = [index];
-        else if (currentAnswer.selectedOptions.includes(index)) {
-          currentAnswer.selectedOptions.splice(
-            currentAnswer.selectedOptions.indexOf(index),
-            1
-          );
-        } else {
-          currentAnswer.selectedOptions.push(index);
-        }
-        const userInputCopy = [...userInput];
-        userInputCopy[currentQuestionIndex] = currentAnswer.selectedOptions;
-        setUserInput(userInputCopy);
-        saveAnswer({
-          index,
-          answerSelectionType,
-          correctAnswer,
-          selectedOptions: currentAnswer.selectedOptions,
-        });
-      }
-    };
-    const isCurrentAnswer = (index: number) => {
-      // console.log(userInput);
-      if (answerSelectionType === AnswerType.single) {
-        return currentAnswer.index === index + 1;
-      }
-      if (!currentAnswer.selectedOptions) return false;
-      return currentAnswer.selectedOptions.includes(index);
-    };
-
-    const checkSelectedAnswer = (index: number) => {
-      if (questionIndex) {
-        if (userInput[questionIndex - 1] === undefined) {
-          return false;
-        }
-        if (answerSelectionType === AnswerType.single) {
-          return userInput[questionIndex - 1] === index;
-        }
-        const input = userInput[questionIndex - 1];
-        if (Array.isArray(input)) {
-          return input.includes(index);
-        }
-      }
-    };
-
-    // Default single to avoid code breaking due to automatic version upgrade
-    answerSelectionType = answerSelectionType || AnswerType.single;
-
-    return (
-      <div className="answersList">
-        {answers.map((answer, index) => {
-          return (
-            <Fragment key={uuidv4()}>
-              <button
-                type="button"
-                onClick={() => handleClick(index)}
-                className={`answerBtn btn  ${
-                  allowNavigation && checkSelectedAnswer(index + 1)
-                    ? "selected"
-                    : null
-                }`}
-              >
-                <div className="answerItem">
-                  <CustomRadio
-                    active={isCurrentAnswer(index)}
-                    type={answerSelectionType}
-                  />
-                  <div>{questionType === "text" && answer}</div>
-                  <div>
-                    {questionType === "photo" && (
-                      <img src={answer} alt="answer" />
-                    )}
-                  </div>
-                </div>
-              </button>
-            </Fragment>
-          );
-        })}
-      </div>
-    );
-  };
 
   const renderResult = () => (
     <div className="card-body">
@@ -530,86 +314,38 @@ function Core({
       {renderQuizResultQuestions()}
     </div>
   );
+
   return (
     <div className="questionWrapper">
       {!endQuiz && (
         <div className="questionWrapperBody">
-          {/* <div className="questionModal">
-            <InstantFeedback
-              question={activeQuestion}
-              showInstantFeedback={showInstantFeedback}
-              correctAnswer={isCorrect}
-              incorrectAnswer={incorrectAnswer}
-              onQuestionSubmit={onQuestionSubmit}
-              userAnswer={[...userInput].pop()}
-            />
-          </div> */}
           <div className="questionInfo">
             {`${appLocale.question} ${currentQuestionIndex + 1} / ${
               questions.length
             }:`}
           </div>
-          <h3
-            className="question"
-            dangerouslySetInnerHTML={rawMarkup(
-              `${
-                activeQuestion && activeQuestion.question
-              } ${appLocale.marksOfQuestion.replace(
-                "<marks>",
-                String(activeQuestion.point)
-              )}`
-            )}
+          <QuestionComponent
+            key={`question-${currentQuestionIndex}`}
+            qObj={activeQuestion}
+            disableRenderTags
+            showInstantFeedback={showInstantFeedback}
+            appLocale={appLocale}
+            allowSkip={allowSkip}
+            onNextQuestion={(isCorrect) => {
+              setFinalAnswers([
+                ...finalAnswers,
+                isCorrect ? AnswerFinalState.correct : AnswerFinalState.wrong
+              ]);
+              nextQuestion(currentQuestionIndex);
+            }}
+            onSkip={()=> {
+              setFinalAnswers([
+                ...finalAnswers,
+                AnswerFinalState.skipped
+              ])
+              nextQuestion(currentQuestionIndex)}
+            }
           />
-
-          {activeQuestion && activeQuestion.questionPic && (
-            <img src={activeQuestion.questionPic} alt="question" />
-          )}
-          {!disableRenderTags &&
-            activeQuestion &&
-            renderTags(
-              answerSelectionTypeState,
-              activeQuestion.correctAnswer,
-              activeQuestion.segment
-            )}
-          {activeQuestion && renderAnswers(activeQuestion, buttons)}
-          {(true || showNextQuestionButton || allowNavigation) && (
-            <div className="questionBtnContainer">
-              {allowNavigation && currentQuestionIndex > 0 && (
-                <button
-                  onClick={() => nextQuestion(currentQuestionIndex - 2)}
-                  className="prevQuestionBtn btn"
-                  type="button"
-                >
-                  {appLocale.prevQuestionBtn}
-                </button>
-              )}
-              <div className="navContainer">
-                <button
-                  onClick={() => {
-                    if (currentAnswer.index) {
-                      submitAnswer();
-                      nextQuestion(currentQuestionIndex);
-                      resetAnswer();
-                    }
-                  }}
-                  className="nextQuestionBtn btn"
-                  type="button"
-                >
-                  {appLocale.nextQuestionBtn}
-                </button>
-                {allowSkip && <button
-                  onClick={() => {
-                    nextQuestion(currentQuestionIndex);
-                    resetAnswer();
-                  }}
-                  className="skipBtn btn"
-                  type="button"
-                >
-                  Skip
-                </button>}
-              </div>
-            </div>
-          )}
         </div>
       )}
       {endQuiz &&
