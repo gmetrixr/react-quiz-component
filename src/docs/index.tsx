@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import quiz from './quiz';
 import Quiz from '../lib/Quiz';
 import { QuestionSummary } from '../lib/Core';
+import { onQuestionSubmitProps } from '../../dist';
 
 const container = document.getElementById('app');
 const root = createRoot(container as Element);
@@ -22,7 +23,8 @@ function App() {
           console.log(`Quiz Complete`, questionSummary)
           setQuizResult(questionSummary)
         }}
-        onQuestionSubmit={(obj) => console.log('user question results:', obj)}
+        allowSkip
+        onQuestionSubmit={(args) => console.log('user question results:', args, args)}
         disableSynopsis
         revealAnswerOnSubmit
         disableRenderTags

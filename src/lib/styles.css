@@ -71,13 +71,15 @@
   cursor: pointer;
 }
 
-.react-quiz-container .answerBtn:hover {
+.react-quiz-container .answerBtn:hover, 
+.react-quiz-container .nextQuestionBtn:hover,
+.react-quiz-container .skipBtn:hover {
   background: rgba(255, 255, 255, 0.8);
 }
 
-.react-quiz-container .nextQuestionBtn, .react-quiz-container .skibBtn {
+.react-quiz-container .nextQuestionBtn, .react-quiz-container .skipBtn {
   padding: 10px 50px 8px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.6);;
   opacity: 0.8;
   border-radius: 30px;
   text-align: center;
@@ -93,15 +95,6 @@
   display: flex;
   align-items: center;
 }
-
-/* .react-quiz-container .skibBtn {
-  color: #1A222E;
-  cursor: pointer;
-  font-size: 12px;
-  text-decoration: 0.1s ease-in-out;
-  background: unset;
-  border: unset;
-} */
 
 .react-quiz-container .questionWrapper .btn.correct {
   background: green;
