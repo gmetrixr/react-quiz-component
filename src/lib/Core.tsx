@@ -9,12 +9,13 @@ import {
   Question,
   AnswerType,
   onQuestionSubmitProps,
+  QuestionSummary,
 } from "./Quiz";
 import { Locale } from "./Locale";
 import { number } from "prop-types";
 import QuestionComponent from "./core-components/Question";
 
-enum AnswerFinalState {
+export enum AnswerFinalState {
   correct = "correct",
   wrong = "wrong",
   skipped = 'skipped'
@@ -30,19 +31,10 @@ interface CoreProps {
   allowNavigation?: boolean;
   disableRenderTags?: boolean;
   allowSkip?: boolean;
-  onQuestionSubmit: (questionResult: onQuestionSubmitProps) => void;
+  onQuestionSubmit: (quetion: Question, isCorrect: boolean) => void;
   onComplete: (questionSummary: QuestionSummary) => void;
   customResultPage?: (questionSummary: QuestionSummary) => React.JSX.Element;
 }
-
-export type QuestionSummary = {
-  numberOfQuestions?: number;
-  numberOfCorrectAnswers?: number;
-  numberOfIncorrectAnswers?: number;
-  numberOfSkippedAnswers?: number;
-  questions?: Question[];
-  finalAnswers?: AnswerFinalState[];
-};
 
 interface CurrentAnswer {
   index?: number;
@@ -331,7 +323,8 @@ function Core({
             showInstantFeedback={showInstantFeedback}
             appLocale={appLocale}
             allowSkip={allowSkip}
-            onNextQuestion={(isCorrect) => {
+            onNextQuestion={(question, isCorrect) => {
+              onQuestionSubmit(question, isCorrect);
               setFinalAnswers([
                 ...finalAnswers,
                 isCorrect ? AnswerFinalState.correct : AnswerFinalState.wrong

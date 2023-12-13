@@ -19,7 +19,7 @@ const QuestionComponent = ({
   showInstantFeedback?: boolean;
   appLocale: Locale;
   allowSkip?: boolean;
-  onNextQuestion: (isCorrect: boolean) => void;
+  onNextQuestion: (question: Question, isCorrect: boolean) => void;
   onSkip: () => void;
 }) => {
   const answers = qObj.answers;
@@ -54,11 +54,11 @@ const QuestionComponent = ({
     let result = isCurrentAnswerCorrect();
     if(showInstantFeedback) {
       if(reveal) {
-        return onNextQuestion(result);
+        return onNextQuestion(qObj, result);
       }
-    }
+    } 
     if(selectedOptions.length > 0 && qObj.answerSelectionType === AnswerType.single) {
-      return onNextQuestion(result);
+      return onNextQuestion(qObj, result);
     }
   };
 
@@ -250,10 +250,10 @@ const _CustomIndicators = ({
           <rect width="120" height="120" rx="24" fill="#1EF533"/>
           <rect x="0.5" y="0.5" width="119" height="119" rx="23.5" stroke="black"/>
           </g>
-          <path d="M21 63.6247L34.1923 82.4652M35.1775 84.1452L99.0683 36" stroke="white" stroke-width="12" stroke-linecap="round"/>
+          <path d="M21 63.6247L34.1923 82.4652M35.1775 84.1452L99.0683 36" stroke="white" strokeWidth="12" strokeLinecap="round"/>
           <defs>
-          <filter id="filter0_b_1_15" x="-4" y="-4" width="128" height="128" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+          <filter id="filter0_b_1_15" x="-4" y="-4" width="128" height="128" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
           <feGaussianBlur in="BackgroundImageFix" stdDeviation="2"/>
           <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1_15"/>
           <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_1_15" result="shape"/>
@@ -265,7 +265,7 @@ const _CustomIndicators = ({
       return (
         <svg style={style} width="20" height="20" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="120" height="120" rx="24" fill="#E91E1E"/>
-          <path d="M32 87.5685L88.5685 31M32 32.5685L88.5685 89.1371" stroke="white" stroke-width="12" stroke-linecap="round"/>
+          <path d="M32 87.5685L88.5685 31M32 32.5685L88.5685 89.1371" stroke="white" strokeWidth="12" strokeLinecap="round"/>
         </svg>
       )
     }
@@ -279,13 +279,13 @@ const _CustomIndicators = ({
     } else if(AnswerOptionState.correct === state) {
       return (
         <svg style={style} width="20" height="20" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="12" y="12" width="96" height="96" rx="48" fill="white" stroke="#1EF533" stroke-width="24"/>
+          <rect x="12" y="12" width="96" height="96" rx="48" fill="white" stroke="#1EF533" strokeWidth="24"/>
         </svg>
       )
     } else {
       return (
         <svg style={style} width="20" height="20" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="12" y="12" width="96" height="96" rx="48" fill="white" stroke="#E91E1E" stroke-width="24"/>
+          <rect x="12" y="12" width="96" height="96" rx="48" fill="white" stroke="#E91E1E" strokeWidth="24"/>
         </svg>
       )
     }
@@ -296,7 +296,7 @@ const CustomIndicators = React.memo(_CustomIndicators);
 // const Radio = ({ fill, stroke } : { fill: string, stroke: string }) => {
 //   return (
 //     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-//       <rect x="2" y="2" width="16" height="16" rx="8" fill={fill} stroke={stroke} stroke-width="4"/>
+//       <rect x="2" y="2" width="16" height="16" rx="8" fill={fill} stroke={stroke} strokeWidth="4"/>
 //     </svg>
 //   )
 // }

@@ -17,14 +17,14 @@ function App() {
         quiz={quiz}
       // shuffle
       // shuffleAnswer
-        showInstantFeedback
+        // showInstantFeedback
       // continueTillCorrect
         onComplete={(questionSummary: QuestionSummary) => {
           console.log(`Quiz Complete`, questionSummary)
           setQuizResult(questionSummary)
         }}
         allowSkip
-        onQuestionSubmit={(args) => console.log('user question results:', args, args)}
+        onQuestionSubmit={(question, isCorrect) => console.log('user question results:', question, isCorrect)}
         disableSynopsis
         revealAnswerOnSubmit
         disableRenderTags

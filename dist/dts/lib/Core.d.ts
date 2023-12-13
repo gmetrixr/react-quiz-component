@@ -1,7 +1,7 @@
 import React from "react";
-import { Question, onQuestionSubmitProps } from "./Quiz";
+import { Question, QuestionSummary } from "./Quiz";
 import { Locale } from "./Locale";
-declare enum AnswerFinalState {
+export declare enum AnswerFinalState {
     correct = "correct",
     wrong = "wrong",
     skipped = "skipped"
@@ -16,17 +16,9 @@ interface CoreProps {
     allowNavigation?: boolean;
     disableRenderTags?: boolean;
     allowSkip?: boolean;
-    onQuestionSubmit: (questionResult: onQuestionSubmitProps) => void;
+    onQuestionSubmit: (quetion: Question, isCorrect: boolean) => void;
     onComplete: (questionSummary: QuestionSummary) => void;
     customResultPage?: (questionSummary: QuestionSummary) => React.JSX.Element;
 }
-export type QuestionSummary = {
-    numberOfQuestions?: number;
-    numberOfCorrectAnswers?: number;
-    numberOfIncorrectAnswers?: number;
-    numberOfSkippedAnswers?: number;
-    questions?: Question[];
-    finalAnswers?: AnswerFinalState[];
-};
 declare function Core({ questions, appLocale, allowSkip, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableRenderTags, }: CoreProps): React.JSX.Element;
 export default Core;

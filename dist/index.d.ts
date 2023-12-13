@@ -23,14 +23,6 @@ declare enum AnswerFinalState {
     wrong = "wrong",
     skipped = "skipped"
 }
-type QuestionSummary = {
-    numberOfQuestions?: number;
-    numberOfCorrectAnswers?: number;
-    numberOfIncorrectAnswers?: number;
-    numberOfSkippedAnswers?: number;
-    questions?: Question[];
-    finalAnswers?: AnswerFinalState[];
-};
 
 declare enum QuestionType {
     text = "text",
@@ -79,9 +71,17 @@ type Props = {
     revealAnswerOnSubmit?: boolean;
     allowNavigation?: boolean;
     disableRenderTags?: boolean;
-    onQuestionSubmit: (questionResult: onQuestionSubmitProps) => void;
+    onQuestionSubmit: (question: Question, isCorrect: boolean) => void;
     disableSynopsis?: boolean;
+};
+type QuestionSummary = {
+    numberOfQuestions?: number;
+    numberOfCorrectAnswers?: number;
+    numberOfIncorrectAnswers?: number;
+    numberOfSkippedAnswers?: number;
+    questions?: Question[];
+    finalAnswers?: AnswerFinalState[];
 };
 declare function Quiz({ quiz, shuffle, allowSkip, shuffleAnswer, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableRenderTags, disableSynopsis, }: Props): React.JSX.Element;
 
-export { AnswerType, type Props, type Question, QuestionType, type QuizProps, Quiz as default, type onQuestionSubmitProps };
+export { AnswerType, type Props, type Question, type QuestionSummary, QuestionType, type QuizProps, Quiz as default, type onQuestionSubmitProps };
