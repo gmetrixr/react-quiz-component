@@ -63,7 +63,8 @@
 }
 
 .react-quiz-container .btn:active, 
-.react-quiz-container .btn:focus-visible
+.react-quiz-container .btn:focus-visible,
+.react-quiz-container .btn:focus
 {
   border: unset;
   outline: unset;
