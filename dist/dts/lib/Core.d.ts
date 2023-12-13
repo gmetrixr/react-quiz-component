@@ -1,6 +1,11 @@
-import React from 'react';
-import { Question } from './Quiz';
-import { Locale } from './Locale';
+import React from "react";
+import { Question, onQuestionSubmitProps } from "./Quiz";
+import { Locale } from "./Locale";
+declare enum AnswerFinalState {
+    correct = "correct",
+    wrong = "wrong",
+    skipped = "skipped"
+}
 interface CoreProps {
     questions: Question[];
     appLocale: Locale;
@@ -10,7 +15,8 @@ interface CoreProps {
     revealAnswerOnSubmit?: boolean;
     allowNavigation?: boolean;
     disableRenderTags?: boolean;
-    onQuestionSubmit: (obj: any) => void;
+    allowSkip?: boolean;
+    onQuestionSubmit: (questionResult: onQuestionSubmitProps) => void;
     onComplete: (questionSummary: QuestionSummary) => void;
     customResultPage?: (questionSummary: QuestionSummary) => React.JSX.Element;
 }
@@ -18,10 +24,9 @@ export type QuestionSummary = {
     numberOfQuestions?: number;
     numberOfCorrectAnswers?: number;
     numberOfIncorrectAnswers?: number;
+    numberOfSkippedAnswers?: number;
     questions?: Question[];
-    userInput?: (number | number[])[];
-    totalPoints?: number;
-    correctPoints?: number;
+    finalAnswers?: AnswerFinalState[];
 };
-declare function Core({ questions, appLocale, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableRenderTags }: CoreProps): React.JSX.Element;
+declare function Core({ questions, appLocale, allowSkip, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableRenderTags, }: CoreProps): React.JSX.Element;
 export default Core;

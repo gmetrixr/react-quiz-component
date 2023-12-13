@@ -1,22 +1,28 @@
-import React from 'react';
-import { QuestionSummary } from './Core';
-import { Locale } from './Locale';
-import './styles.css';
-export type QuestionType = "text" | "photo";
-export type AnswerType = "single" | "multiple";
+import React from "react";
+import { QuestionSummary } from "./Core";
+import { Locale } from "./Locale";
+import "./styles.css";
+export declare enum QuestionType {
+    text = "text",
+    photo = "photo"
+}
+export declare enum AnswerType {
+    single = "single",
+    multiple = "multiple"
+}
 export type Question = {
     question: string;
     questionType: QuestionType;
     questionPic?: string;
     answerSelectionType: AnswerType;
     answers: string[];
-    correctAnswer: number | number[];
+    correctAnswer: number[];
     messageForCorrectAnswer?: string;
     messageForIncorrectAnswer?: string;
     explanation?: string;
     point: number;
     questionIndex?: number;
-    segment: string;
+    segment?: string;
 };
 export type QuizProps = {
     quizTitle: string;
@@ -27,12 +33,13 @@ export type QuizProps = {
 };
 export type onQuestionSubmitProps = {
     question: Question;
-    userAnswer: string | number | boolean;
+    userAnswer: number | number[];
     isCorrect: boolean;
 };
 export type Props = {
     quiz: QuizProps;
     shuffle?: boolean;
+    allowSkip?: boolean;
     shuffleAnswer?: boolean;
     showDefaultResult?: boolean;
     customResultPage?: (questionSummary: QuestionSummary) => React.JSX.Element;
@@ -42,8 +49,8 @@ export type Props = {
     revealAnswerOnSubmit?: boolean;
     allowNavigation?: boolean;
     disableRenderTags?: boolean;
-    onQuestionSubmit: (obj: any) => void;
+    onQuestionSubmit: (questionResult: onQuestionSubmitProps) => void;
     disableSynopsis?: boolean;
 };
-declare function Quiz({ quiz, shuffle, shuffleAnswer, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableRenderTags, disableSynopsis, }: Props): React.JSX.Element;
+declare function Quiz({ quiz, shuffle, allowSkip, shuffleAnswer, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableRenderTags, disableSynopsis, }: Props): React.JSX.Element;
 export default Quiz;
