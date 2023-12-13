@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Core, { QuestionSummary } from "./Core";
+import Core, { AnswerFinalState } from "./Core";
 import defaultLocale, { Locale } from "./Locale";
 import "./styles.css";
 import { number } from "prop-types";
@@ -56,8 +56,17 @@ export type Props = {
   revealAnswerOnSubmit?: boolean;
   allowNavigation?: boolean;
   disableRenderTags?: boolean;
-  onQuestionSubmit: (questionResult: onQuestionSubmitProps) => void;
+  onQuestionSubmit: (question: Question, isCorrect: boolean) => void;
   disableSynopsis?: boolean;
+};
+
+export type QuestionSummary = {
+  numberOfQuestions?: number;
+  numberOfCorrectAnswers?: number;
+  numberOfIncorrectAnswers?: number;
+  numberOfSkippedAnswers?: number;
+  questions?: Question[];
+  finalAnswers?: AnswerFinalState[];
 };
 
 function Quiz({
