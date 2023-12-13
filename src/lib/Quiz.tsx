@@ -136,11 +136,7 @@ function Quiz({
     // return newQuestions;
   };
   const shuffleQuestions = useCallback((q: Question[]) => {
-    for (let i = q.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [q[i], q[j]] = [q[j], q[i]];
-    }
-    return q;
+    return q.sort(() => Math.random() - 0.5);
   }, []);
 
   useEffect(() => {
