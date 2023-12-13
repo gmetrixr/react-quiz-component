@@ -46,6 +46,7 @@ export type Props = {
   continueTillCorrect?: boolean,
   revealAnswerOnSubmit?: boolean,
   allowNavigation?: boolean,
+  disableRenderTags?: boolean,
   onQuestionSubmit: (obj: any) => void,
   disableSynopsis?: boolean,
 };
@@ -62,6 +63,7 @@ function Quiz({
   revealAnswerOnSubmit,
   allowNavigation,
   onQuestionSubmit,
+  disableRenderTags,
   disableSynopsis,
 } : Props) : React.JSX.Element {
   const [start, setStart] = useState(false);
@@ -253,6 +255,7 @@ function Quiz({
         <Core
           questions={questions}
           showDefaultResult={showDefaultResult}
+          disableRenderTags={disableRenderTags}
           onComplete={onComplete}
           customResultPage={customResultPage}
           showInstantFeedback={showInstantFeedback}
