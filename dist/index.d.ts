@@ -67,9 +67,10 @@ type Props = {
     continueTillCorrect?: boolean;
     revealAnswerOnSubmit?: boolean;
     allowNavigation?: boolean;
+    disableRenderTags?: boolean;
     onQuestionSubmit: (obj: any) => void;
     disableSynopsis?: boolean;
 };
-declare function Quiz({ quiz, shuffle, shuffleAnswer, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableSynopsis, }: Props): React.JSX.Element;
+declare function Quiz({ quiz, shuffle, shuffleAnswer, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableRenderTags, disableSynopsis, }: Props): React.JSX.Element;
 
 export { type AnswerType, type Props, type Question, type QuestionType, type QuizProps, Quiz as default, type onQuestionSubmitProps };

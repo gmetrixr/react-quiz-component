@@ -9,6 +9,7 @@ interface CoreProps {
     continueTillCorrect?: boolean;
     revealAnswerOnSubmit?: boolean;
     allowNavigation?: boolean;
+    disableRenderTags?: boolean;
     onQuestionSubmit: (obj: any) => void;
     onComplete: (questionSummary: QuestionSummary) => void;
     customResultPage?: (questionSummary: QuestionSummary) => React.JSX.Element;
@@ -22,5 +23,5 @@ export type QuestionSummary = {
     totalPoints?: number;
     correctPoints?: number;
 };
-declare function Core({ questions, appLocale, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, }: CoreProps): React.JSX.Element;
+declare function Core({ questions, appLocale, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect, revealAnswerOnSubmit, allowNavigation, onQuestionSubmit, disableRenderTags }: CoreProps): React.JSX.Element;
 export default Core;
