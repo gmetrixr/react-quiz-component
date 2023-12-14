@@ -142,7 +142,7 @@ const QuestionComponent = ({
                     state={getAnswerState(index)}
                     type={qObj.answerSelectionType}
                   />
-                  <div>{qObj.questionType === QuestionType.text && answer}</div>
+                  <div className="answerText">{qObj.questionType === QuestionType.text && answer}</div>
                   <div>
                     {qObj.questionType === QuestionType.photo && (
                       <img src={answer} alt="answer" />

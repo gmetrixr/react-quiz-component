@@ -74,22 +74,8 @@
   cursor: not-allowed !important;
 }
 
-.react-quiz-container .btn {
-  /* margin-bottom: 0;
-  font-weight: 600;
-  text-align: center;
-  padding: 11px 12px;
-  vertical-align: middle;
-  touch-action: manipulation;
-  cursor: pointer;
-  background-image: none;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  cursor: pointer; */
+.react-quiz-container .answerText {
+  text-align: left;
 }
 
 .react-quiz-container .answerBtn {

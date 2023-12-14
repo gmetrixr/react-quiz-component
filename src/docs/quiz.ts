@@ -17,7 +17,7 @@ const quiz : QuizProps = {
       questionType: QuestionType.text,
       answerSelectionType: AnswerType.single,
       answers: [
-        'this.getState()',
+        'this.getState() How can you access the state of a component from inside of a member function? How can you access the state of a component from inside of a member function?How can you access the state of a component from inside of a member function?How can you access the state of a component from inside of a member function?How can you access the state of a component from inside of a member function?How can you access the state of a component from inside of a member function?',
         'this.prototype.stateValue',
         'this.state',
         'this.values',
